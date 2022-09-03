@@ -37,7 +37,11 @@ const knight = (start) => {
     let row = convertNum(x + m.x);
     let column = y + m.y;
 
-    possibleMoves.push(row + '' + column);
+    if (column > 8 || row === undefined || column === undefined) {
+      console.log('invalid move');
+    } else {
+      possibleMoves.push(row + '' + column);
+    }
   }
   console.log('Possible Coordinates:', possibleMoves);
 };
@@ -102,4 +106,4 @@ const convertABC = (v) => {
 
 gameBoard();
 
-knightMoves('d5', 'b2');
+knightMoves('a8', 'b2');
