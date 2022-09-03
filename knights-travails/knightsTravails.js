@@ -1,53 +1,73 @@
+class Knight {
+  constructor(start) {
+    this.start = start;
+    this.possibleMoves = [];
+    this.moves = [
+      { x: 2, y: -1 },
+      { x: 2, y: 1 },
+      { x: 1, y: -2 },
+      { x: 1, y: 2 },
+      { x: -2, y: -1 },
+      { x: -2, y: 1 },
+      { x: -1, y: -2 },
+      { x: -1, y: 2 },
+    ];
+  }
+
+  move(pos = this.start) {
+    console.log(pos);
+
+    let x = convertABC(pos.charAt(0));
+    let y = Number(pos.charAt(1));
+
+    for (let m of this.moves) {
+      let row = convertNum(x + m.x);
+      let column = y + m.y;
+      let possibleMove = row + '' + column;
+
+      let findCell = false;
+
+      board.some((cell) => {
+        if (possibleMove === cell) {
+          findCell = true;
+        }
+      });
+
+      if (!findCell) {
+        console.log('invalid move');
+      } else {
+        possibleMove = row + '' + column;
+        this.possibleMoves.push(possibleMove);
+        // if there already is a move like that
+        findCell = false;
+        return this.move(possibleMove);
+      }
+    }
+
+    console.log('Possible Coordinates:', this.possibleMoves);
+  }
+}
+
+let board = [];
 const gameBoard = () => {
-  let board = [];
   for (let x = 1; x <= 8; x++) {
-    let row = [];
+    // let row = [];
     for (let y = 1; y <= 8; y++) {
       let cell = {};
       cell = convertNum(y) + x;
-      row.push(cell);
+      board.push(cell);
     }
-    board.push(row);
+    // board.push(row);
   }
-  board.forEach((item) => {
-    console.log(item);
-  });
-};
-
-const knight = (start) => {
-  let pos = start;
-
-  let x = convertABC(pos.charAt(0));
-  let y = Number(pos.charAt(1));
-
-  let possibleMoves = [];
-
-  let moves = [
-    { x: 2, y: -1 },
-    { x: 2, y: 1 },
-    { x: 1, y: -2 },
-    { x: 1, y: 2 },
-    { x: -2, y: -1 },
-    { x: -2, y: 1 },
-    { x: -1, y: -2 },
-    { x: -1, y: 2 },
-  ];
-
-  for (let m of moves) {
-    let row = convertNum(x + m.x);
-    let column = y + m.y;
-
-    if (column > 8 || row === undefined || column === undefined) {
-      console.log('invalid move');
-    } else {
-      possibleMoves.push(row + '' + column);
-    }
-  }
-  console.log('Possible Coordinates:', possibleMoves);
+  //   board.forEach((item) => {
+  //     console.log(item);
+  //   });
+  console.log(board);
 };
 
 const knightMoves = (start, goal) => {
-  knight(start);
+  let newKnight = new Knight(start);
+  newKnight.move(start);
 };
 
 const convertNum = (x) => {
@@ -106,4 +126,4 @@ const convertABC = (v) => {
 
 gameBoard();
 
-knightMoves('a8', 'b2');
+knightMoves('d5', 'b2');
