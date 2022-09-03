@@ -16,18 +16,6 @@ class Tree {
     this.heightC = -1;
   }
 
-  _traverse(root = this.root, arr) {
-    if (arr !== undefined) arr.push(root.d);
-    if (root.left !== null) {
-      this._traverse(root.left, arr);
-    }
-
-    if (root.right !== null) {
-      this._traverse(root.right, arr);
-    }
-    return arr;
-  }
-
   buildTree(arr, start, end) {
     if (start > end) {
       return null;
@@ -243,6 +231,7 @@ class Tree {
   }
 
   rebalance(root = this.root) {
+    if (this.isBalanced(this.root)) return this.root;
     if (root === null) return;
 
     this.inorder();
@@ -311,26 +300,17 @@ const removeDup = (arr) => {
 };
 
 const driverScript = () => {
-  // let randoms = [...Array(12)].map(() =>
-  //   Math.floor(Math.random() * 5000)
-  // );
+  let randoms = [...Array(12)].map(() =>
+    Math.floor(Math.random() * 5000)
+  );
 
-  mergeSort([
-    561, 726, 831, 1118, 1427, 1891, 3189, 3309, 3884, 4706, 4897,
-    4927,
-  ]);
+  mergeSort(randoms);
   // mergeSort return a sorted array from random array in a variable called res
   // so we pass res as a sorted array to the newly generated tree.
   let tree = new Tree(res);
-  tree.insert(8);
-  tree.insert(10);
-  tree.insert(11);
-  tree.insert(9);
-  tree.delete(9);
 
   console.log('initial array used: ' + res);
 
-  tree.rebalance();
   console.log('is the tree balanced: ' + tree.isBalanced());
 
   console.log('---level order of tree---');
@@ -353,6 +333,45 @@ const driverScript = () => {
   console.log('---inorder of tree---');
 
   prettyPrint(tree.root);
+
+  // tree.insert(8);
+  // tree.insert(9);
+  // tree.insert(11);
+  // tree.insert(13);
+  // tree.insert(16);
+  // tree.insert(19);
+  // tree.insert(26);
+  // tree.insert(38);
+  // tree.insert(51);
+  // tree.insert(65);
+  // tree.insert(85);
+
+  // tree.rebalance();
+  // console.log(
+  //   '-----------------------------------------------------'
+  // );
+
+  // console.log('---level order of tree---');
+  // tree.levelOrder();
+  // console.log('---level order of tree---');
+
+  // console.log('---preorder of tree---');
+  // tree.preorder();
+  // console.log(tree.preorderData);
+  // console.log('---preorder of tree---');
+
+  // console.log('---postorder of tree---');
+  // tree.postorder();
+  // console.log(tree.postorderData);
+  // console.log('---postorder of tree---');
+
+  // console.log('---inorder of tree---');
+  // tree.inorder();
+  // console.log(tree.inorderData);
+  // console.log('---inorder of tree---');
+
+  // prettyPrint(tree.root);
+  // console.log('is the tree balanced: ' + tree.isBalanced());
 };
 
 driverScript();
