@@ -1,7 +1,10 @@
 class Knight {
-  constructor(start) {
+  constructor(start, goal) {
     this.start = start;
+    this.goal = goal;
     this.possibleMoves = [];
+    this.temp = [];
+    this.found = false;
     this.moves = [
       { x: 2, y: -1 },
       { x: 2, y: 1 },
@@ -14,16 +17,23 @@ class Knight {
     ];
   }
 
-  move(pos = this.start) {
-    console.log(pos);
-
+  move(pos = this.start, goal = this.goal) {
     let x = convertABC(pos.charAt(0));
     let y = Number(pos.charAt(1));
 
     for (let m of this.moves) {
+      if (this.found === true) {
+        return;
+      }
       let row = convertNum(x + m.x);
       let column = y + m.y;
       let possibleMove = row + '' + column;
+      if (possibleMove === goal) {
+        console.log(`${this.temp}`);
+        console.log(`MATCH! ${pos} goes to ${possibleMove}`);
+        this.found = true;
+        return true;
+      }
 
       let findCell = false;
 
@@ -34,17 +44,24 @@ class Knight {
       });
 
       if (!findCell) {
-        console.log('invalid move');
+        continue;
       } else {
-        possibleMove = row + '' + column;
-        this.possibleMoves.push(possibleMove);
-        // if there already is a move like that
-        findCell = false;
-        return this.move(possibleMove);
+        const find = this.possibleMoves.find(
+          (item) => item === possibleMove
+        );
+        if (find) {
+          findCell = false;
+        } else {
+          findCell = false;
+          this.possibleMoves.push(possibleMove);
+          this.possibleMoves.some((move) => {
+            let temp = `${pos} goes to ${move}`;
+            this.temp.push(temp);
+            return this.move(move);
+          });
+        }
       }
     }
-
-    console.log('Possible Coordinates:', this.possibleMoves);
   }
 }
 
@@ -66,8 +83,8 @@ const gameBoard = () => {
 };
 
 const knightMoves = (start, goal) => {
-  let newKnight = new Knight(start);
-  newKnight.move(start);
+  let newKnight = new Knight(start, goal);
+  newKnight.move(start, goal);
 };
 
 const convertNum = (x) => {
@@ -126,4 +143,4 @@ const convertABC = (v) => {
 
 gameBoard();
 
-knightMoves('d5', 'b2');
+knightMoves('a1', 'd4');
