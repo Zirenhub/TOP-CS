@@ -2,9 +2,7 @@ class Knight {
   constructor(start, goal) {
     this.start = start;
     this.goal = goal;
-    this.possibleMoves = [];
-    this.temp = [];
-    this.found = false;
+    this.checked = [];
     this.moves = [
       { x: 2, y: -1 },
       { x: 2, y: 1 },
@@ -17,51 +15,67 @@ class Knight {
     ];
   }
 
+  checkWin(possibleMove, goal, pos) {
+    if (possibleMove === goal) {
+      console.log(`MATCH! ${pos} goes to ${possibleMove}`);
+      return true;
+    }
+  }
+
   move(pos = this.start, goal = this.goal) {
+    this.play((pos = this.start), (goal = this.goal));
+    let moveToTest = possibleMoves;
+    moveToTest.some((m) => {
+      this.move(m);
+    });
+  }
+
+  play(pos, goal) {
     let x = convertABC(pos.charAt(0));
     let y = Number(pos.charAt(1));
+    let row;
+    let column;
+    let possibleMove;
+    let possibleMoves = [];
 
     for (let m of this.moves) {
-      if (this.found === true) {
-        return;
-      }
-      let row = convertNum(x + m.x);
-      let column = y + m.y;
-      let possibleMove = row + '' + column;
-      if (possibleMove === goal) {
-        console.log(`${this.temp}`);
-        console.log(`MATCH! ${pos} goes to ${possibleMove}`);
-        this.found = true;
-        return true;
-      }
+      row = convertNum(x + m.x);
+      column = y + m.y;
+      possibleMove = row + '' + column;
 
-      let findCell = false;
+      let validCell = false;
+      let skipCell = false;
 
-      board.some((cell) => {
-        if (possibleMove === cell) {
-          findCell = true;
+      this.checked.some((cell) => {
+        if (cell === possibleMove) {
+          skipCell = true;
+          return true;
         }
       });
 
-      if (!findCell) {
-        continue;
-      } else {
-        const find = this.possibleMoves.find(
-          (item) => item === possibleMove
-        );
-        if (find) {
-          findCell = false;
-        } else {
-          findCell = false;
-          this.possibleMoves.push(possibleMove);
-          this.possibleMoves.some((move) => {
-            let temp = `${pos} goes to ${move}`;
-            this.temp.push(temp);
-            return this.move(move);
-          });
+      board.some((cell) => {
+        if (cell === possibleMove) {
+          validCell = true;
+          return true;
         }
+      });
+
+      if (validCell === false || skipCell === true) {
+        continue;
       }
+
+      this.checked.push(possibleMove);
+
+      // let temp = `${pos} goes to ${possibleMove}`;
+      console.log(`${pos} goes to ${possibleMove}`);
+
+      if (this.checkWin(possibleMove, goal, pos)) {
+        return true;
+      }
+
+      possibleMoves.push(possibleMove);
     }
+    // this.play(possibleMoves);
   }
 }
 
@@ -143,4 +157,4 @@ const convertABC = (v) => {
 
 gameBoard();
 
-knightMoves('a1', 'd4');
+knightMoves('h1', 'a8');
